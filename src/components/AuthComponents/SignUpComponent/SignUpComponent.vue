@@ -8,7 +8,14 @@
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-sm">
           <q-input
             outlined
-            color="teal"
+            v-model="descName"
+            label="Nome / Organização"
+            hint="Ex.: Fazenda Nzila"
+            lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Campo Obrigatório']"
+          />
+          <q-input
+            outlined
             v-model="userName"
             label="E-mail *"
             hint="Ex.: exemplo@exemplo.com"
@@ -18,7 +25,6 @@
           />
           <q-input
             outlined
-            color="teal"
             v-model="password"
             label="Palavra-Passe *"
             lazy-rules
@@ -26,40 +32,35 @@
             hint="******"
             :rules="[(val) => (val && val.length > 0) || 'Campo Obrigatório']"
           />
-
-          <div class>
-            <span class="cursor-pointer text-teal-9"
-              >Esqueci a palavra-passe</span
-            >
-          </div>
-
-          <q-toggle
-            left-label
-            v-model="remember"
-            class="text-grey-7"
-            label="Lembrar-me"
-            color="teal-9"
+          <q-input
+            outlined
+            v-model="confirmPassword"
+            label="Confirmar Palavra-Passe *"
+            lazy-rules
+            type="password"
+            hint="******"
+            :rules="[(val) => (val && val.length > 0) || 'Campo Obrigatório']"
           />
 
           <div>
             <q-btn
               class="full-width"
-              label="Entrar"
-              type="submit"
+              label="Cadastrar"
               no-caps
               size="lg"
+              type="submit"
               color="teal-9"
             />
           </div>
           <div>
             <q-btn
               class="full-width"
-              label="Cadastrar"
-              outline
+              label="Já tenho uma conta"
               no-caps
+              outline
               size="lg"
               color="pink-9"
-              to="/auth/signup"
+              to="/auth/signin"
             />
           </div>
 
@@ -74,23 +75,23 @@
 
 <script setup>
 defineOptions({
-  name: "SignInComponent",
+  name: "SignUpComponent",
 });
+
 import { useQuasar } from "quasar";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import LogoComponent from "src/components/UI/LogoComponent/LogoComponent.vue";
 import OAuthComponent from "src/components/UI/OAuthComponent/OAuthComponent.vue";
 
 const $q = useQuasar();
-const router = useRouter();
 
+const descName = ref(null);
 const userName = ref(null);
 const password = ref(null);
-const remember = ref(false);
+const confirmPassword = ref(null);
 
 const onSubmit = () => {
-  if (remember.value !== true) {
+  if (descName.value == null && userName.value == null) {
     $q.notify({
       color: "red-5",
       textColor: "white",
@@ -104,15 +105,14 @@ const onSubmit = () => {
       icon: "cloud_done",
       message: "Submitted",
     });
-
-    router.push("/dashboard/home");
   }
 };
 
 const onReset = () => {
+  descName.value = null;
   userName.value = null;
-  password.value = null;
-  remember.value = false;
+  password.value = false;
+  confirmPassword.value = false;
 };
 </script>
 
